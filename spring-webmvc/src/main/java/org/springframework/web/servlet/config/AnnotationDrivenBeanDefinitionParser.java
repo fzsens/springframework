@@ -185,6 +185,7 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 
 		RuntimeBeanReference contentNegotiationManager = getContentNegotiationManager(element, source, parserContext);
 
+		//创建RequestMappingHandlerMapping用于初始化@Controller和@RequestMapping
 		RootBeanDefinition handlerMappingDef = new RootBeanDefinition(RequestMappingHandlerMapping.class);
 		handlerMappingDef.setSource(source);
 		handlerMappingDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
