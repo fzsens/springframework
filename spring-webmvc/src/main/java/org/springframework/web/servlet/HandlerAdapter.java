@@ -27,6 +27,8 @@ import javax.servlet.http.HttpServletResponse;
  * extensible. The {@code DispatcherServlet} accesses all installed handlers through
  * this interface, meaning that it does not contain code specific to any handler type.
  *
+ * 用于适应DispatcherServlet的拓展,其会通过HandlerAdapter来执行具体的Handler
+ *
  * <p>Note that a handler can be of type {@code Object}. This is to enable
  * handlers from other frameworks to be integrated with this framework without
  * custom coding, as well as to allow for annotation-driven handler objects that

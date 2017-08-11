@@ -189,6 +189,7 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 		RootBeanDefinition handlerMappingDef = new RootBeanDefinition(RequestMappingHandlerMapping.class);
 		handlerMappingDef.setSource(source);
 		handlerMappingDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+        //最高优先级
 		handlerMappingDef.getPropertyValues().add("order", 0);
 		handlerMappingDef.getPropertyValues().add("contentNegotiationManager", contentNegotiationManager);
 

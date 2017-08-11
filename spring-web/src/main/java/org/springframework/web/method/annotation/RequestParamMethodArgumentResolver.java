@@ -49,6 +49,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.util.WebUtils;
 
 /**
+ * 通过Request 构建 @RequestParam注解的参数,
  * Resolves method arguments annotated with @{@link RequestParam}, arguments of
  * type {@link MultipartFile} in conjunction with Spring's {@link MultipartResolver}
  * abstraction, and arguments of type {@code javax.servlet.http.Part} in conjunction
@@ -158,6 +159,7 @@ public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethod
 
 	@Override
 	protected Object resolveName(String name, MethodParameter parameter, NativeWebRequest webRequest) throws Exception {
+        // 执行RequestParam注解的映射
 		HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
 		MultipartHttpServletRequest multipartRequest =
 				WebUtils.getNativeRequest(servletRequest, MultipartHttpServletRequest.class);

@@ -32,6 +32,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 public interface HandlerMethodArgumentResolver {
 
 	/**
+     * 判断那些类型的Param是支持转换的
+     * 
 	 * Whether the given {@linkplain MethodParameter method parameter} is
 	 * supported by this resolver.
 	 * @param parameter the method parameter to check

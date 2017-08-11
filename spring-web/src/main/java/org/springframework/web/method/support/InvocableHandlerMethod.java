@@ -125,6 +125,7 @@ public class InvocableHandlerMethod extends HandlerMethod {
 	public Object invokeForRequest(NativeWebRequest request, ModelAndViewContainer mavContainer,
 			Object... providedArgs) throws Exception {
 
+        // 进行参数转换
 		Object[] args = getMethodArgumentValues(request, mavContainer, providedArgs);
 		if (logger.isTraceEnabled()) {
 			StringBuilder sb = new StringBuilder("Invoking [");
@@ -133,6 +134,7 @@ public class InvocableHandlerMethod extends HandlerMethod {
 			sb.append(Arrays.asList(args));
 			logger.trace(sb.toString());
 		}
+        //使用从request中分离的参数进行方法调用
 		Object returnValue = doInvoke(args);
 		if (logger.isTraceEnabled()) {
 			logger.trace("Method [" + getMethod().getName() + "] returned [" + returnValue + "]");
@@ -141,6 +143,7 @@ public class InvocableHandlerMethod extends HandlerMethod {
 	}
 
 	/**
+     * 分解request得到参数
 	 * Get the method argument values for the current request.
 	 */
 	private Object[] getMethodArgumentValues(NativeWebRequest request, ModelAndViewContainer mavContainer,
@@ -158,6 +161,7 @@ public class InvocableHandlerMethod extends HandlerMethod {
 			}
 			if (this.argumentResolvers.supportsParameter(parameter)) {
 				try {
+                    // 获得参数
 					args[i] = this.argumentResolvers.resolveArgument(
 							parameter, mavContainer, request, this.dataBinderFactory);
 					continue;

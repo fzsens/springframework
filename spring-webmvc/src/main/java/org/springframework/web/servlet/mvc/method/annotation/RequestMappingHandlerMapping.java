@@ -45,6 +45,8 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMappi
  * {@link RequestMapping @RequestMapping} annotations in
  * {@link Controller @Controller} classes.
  *
+ * 将@RequestMapping 和 @Controller 转换为 RequestMappingInfo
+ *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
  * @author Sam Brannen
@@ -114,6 +116,7 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 
 	@Override
 	public void afterPropertiesSet() {
+        // 设置配置选项
 		this.config = new RequestMappingInfo.BuilderConfiguration();
 		this.config.setPathHelper(getUrlPathHelper());
 		this.config.setPathMatcher(getPathMatcher());

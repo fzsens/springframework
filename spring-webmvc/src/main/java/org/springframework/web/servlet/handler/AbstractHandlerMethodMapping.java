@@ -184,6 +184,8 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	}
 
 	/**
+     * 扫描所有的beans,并创建对应的HandlerMethod
+     *
 	 * Scan beans in the ApplicationContext, detect and register handler methods.
 	 * @see #isHandler(Class)
 	 * @see #getMappingForMethod(Method, Class)
@@ -193,6 +195,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		if (logger.isDebugEnabled()) {
 			logger.debug("Looking for request mappings in application context: " + getApplicationContext());
 		}
+        // 找到所有的Beans
 		String[] beanNames = (this.detectHandlerMethodsInAncestorContexts ?
 				BeanFactoryUtils.beanNamesForTypeIncludingAncestors(getApplicationContext(), Object.class) :
 				getApplicationContext().getBeanNamesForType(Object.class));
@@ -209,6 +212,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 						logger.debug("Could not resolve target class for bean with name '" + beanName + "'", ex);
 					}
 				}
+                // 符合@Controller 和 @RequestMapping
 				if (beanType != null && isHandler(beanType)) {
 					detectHandlerMethods(beanName);
 				}
@@ -218,6 +222,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	}
 
 	/**
+     * 根据bean的类型,探测注册HandlerMethod
 	 * Look for handler methods in a handler.
 	 * @param handler the bean name of a handler or a handler instance
 	 */
@@ -238,6 +243,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 			logger.debug(methods.size() + " request handler methods found on " + userType + ": " + methods);
 		}
 		for (Map.Entry<Method, T> entry : methods.entrySet()) {
+            //注册
 			registerHandlerMethod(handler, entry.getKey(), entry.getValue());
 		}
 	}
@@ -471,6 +477,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 
 		private final MultiValueMap<String, T> urlLookup = new LinkedMultiValueMap<String, T>();
 
+		// 保存path = > HandlerMethod的映射
 		private final Map<String, List<HandlerMethod>> nameLookup =
 				new ConcurrentHashMap<String, List<HandlerMethod>>();
 
@@ -543,6 +550,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 				String name = null;
 				if (getNamingStrategy() != null) {
 					name = getNamingStrategy().getName(handlerMethod, mapping);
+                    // 添加到Mapping nameLookup
 					addMappingName(name, handlerMethod);
 				}
 

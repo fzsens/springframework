@@ -50,6 +50,8 @@ public abstract class MethodIntrospector {
 	 * or {@code null} for no match
 	 * @return the selected methods associated with their metadata (in the order of retrieval),
 	 * or an empty map in case of no match
+     * <p>返回method 和各个method对应的 RequestMappingInfo
+     *
 	 */
 	public static <T> Map<Method, T> selectMethods(Class<?> targetType, final MetadataLookup<T> metadataLookup) {
 		final Map<Method, T> methodMap = new LinkedHashMap<Method, T>();
@@ -73,6 +75,7 @@ public abstract class MethodIntrospector {
 					if (result != null) {
 						Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(specificMethod);
 						if (bridgedMethod == specificMethod || metadataLookup.inspect(bridgedMethod) == null) {
+                            // method,对应 {@link RequestMappingInfo}
 							methodMap.put(specificMethod, result);
 						}
 					}

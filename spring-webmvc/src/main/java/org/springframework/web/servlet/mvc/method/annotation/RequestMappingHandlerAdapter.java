@@ -717,11 +717,21 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		return true;
 	}
 
+    /**
+     * 处理客户端的请求
+     * @param request current HTTP request
+     * @param response current HTTP response
+     * @param handlerMethod handler method to use. This object must have previously been passed to the
+     * {@link #supportsInternal(HandlerMethod)} this interface, which must have returned {@code true}.
+     * @return ModelAndView
+     * @throws Exception
+     */
 	@Override
 	protected ModelAndView handleInternal(HttpServletRequest request,
 			HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
 
 		ModelAndView mav;
+        // 检查request
 		checkRequest(request);
 
 		// Execute invokeHandlerMethod in synchronized block if required.
@@ -796,10 +806,13 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 		ServletWebRequest webRequest = new ServletWebRequest(request, response);
 
+        // 获取数据绑定器
 		WebDataBinderFactory binderFactory = getDataBinderFactory(handlerMethod);
 		ModelFactory modelFactory = getModelFactory(handlerMethod, binderFactory);
 
+        // 封装HandlerMethod
 		ServletInvocableHandlerMethod invocableMethod = createInvocableHandlerMethod(handlerMethod);
+
 		invocableMethod.setHandlerMethodArgumentResolvers(this.argumentResolvers);
 		invocableMethod.setHandlerMethodReturnValueHandlers(this.returnValueHandlers);
 		invocableMethod.setDataBinderFactory(binderFactory);
@@ -829,6 +842,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			invocableMethod = invocableMethod.wrapConcurrentResult(result);
 		}
 
+        // 执行
 		invocableMethod.invokeAndHandle(webRequest, mavContainer);
 		if (asyncManager.isConcurrentHandlingStarted()) {
 			return null;

@@ -92,6 +92,7 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
+        //
 		HandlerMethodArgumentResolver resolver = getArgumentResolver(parameter);
 		if (resolver == null) {
 			throw new IllegalArgumentException("Unknown parameter type [" + parameter.getParameterType().getName() + "]");
@@ -103,6 +104,7 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 	 * Find a registered {@link HandlerMethodArgumentResolver} that supports the given method parameter.
 	 */
 	private HandlerMethodArgumentResolver getArgumentResolver(MethodParameter parameter) {
+        // 获得映射类的对象，从argumentResolver中找到
 		HandlerMethodArgumentResolver result = this.argumentResolverCache.get(parameter);
 		if (result == null) {
 			for (HandlerMethodArgumentResolver methodArgumentResolver : this.argumentResolvers) {
