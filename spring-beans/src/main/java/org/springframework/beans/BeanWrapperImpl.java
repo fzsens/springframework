@@ -31,6 +31,9 @@ import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.util.Assert;
 
 /**
+ *
+ * 设计的目标是简化对Bean进行属性依赖注入，和属性访问时候的操作
+ *
  * Default {@link BeanWrapper} implementation that should be sufficient
  * for all typical use cases. Caches introspection results for efficiency.
  *

@@ -80,6 +80,13 @@ public abstract class AbstractPropertyAccessor extends TypeConverterSupport impl
 		setPropertyValues(pvs, ignoreUnknown, false);
 	}
 
+    /**
+     * 具体设置属性值
+     * @param pvs PropertyValues to set on the target object
+     * @param ignoreUnknown should we ignore unknown properties (not found in the bean)
+     * @param ignoreInvalid should we ignore invalid properties (found but not accessible)
+     * @throws BeansException
+     */
 	@Override
 	public void setPropertyValues(PropertyValues pvs, boolean ignoreUnknown, boolean ignoreInvalid)
 			throws BeansException {

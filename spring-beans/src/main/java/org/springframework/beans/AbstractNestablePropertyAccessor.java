@@ -284,6 +284,12 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 		}
 	}
 
+    /**
+     * 具体设置Bean的值
+     * @param tokens
+     * @param pv
+     * @throws BeansException
+     */
 	@SuppressWarnings("unchecked")
 	protected void setPropertyValue(PropertyTokenHolder tokens, PropertyValue pv) throws BeansException {
 		String propertyName = tokens.canonicalName;
