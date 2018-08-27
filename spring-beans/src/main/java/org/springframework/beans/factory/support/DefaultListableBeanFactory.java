@@ -1022,6 +1022,15 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 	}
 
+    /**
+     * 根据依赖描述符号 {@link DependencyDescriptor} 解析依赖
+     * @param descriptor
+     * @param beanName
+     * @param autowiredBeanNames
+     * @param typeConverter
+     * @return
+     * @throws BeansException
+     */
 	public Object doResolveDependency(DependencyDescriptor descriptor, String beanName,
 			Set<String> autowiredBeanNames, TypeConverter typeConverter) throws BeansException {
 
@@ -1118,6 +1127,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			return matchingBeans;
 		}
 		else {
+            // 找到符合条件的Bean
 			Map<String, Object> matchingBeans = findAutowireCandidates(beanName, type, descriptor);
 			if (matchingBeans.isEmpty()) {
 				if (descriptor.isRequired()) {

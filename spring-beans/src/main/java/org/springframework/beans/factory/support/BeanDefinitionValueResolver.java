@@ -332,6 +332,8 @@ class BeanDefinitionValueResolver {
 	}
 
 	/**
+     * 解析运行时引用
+     *
 	 * Resolve a reference to another bean in the factory.
 	 */
 	private Object resolveReference(Object argName, RuntimeBeanReference ref) {
