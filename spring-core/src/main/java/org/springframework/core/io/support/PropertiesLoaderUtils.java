@@ -174,6 +174,7 @@ public abstract class PropertiesLoaderUtils {
 		if (classLoaderToUse == null) {
 			classLoaderToUse = ClassUtils.getDefaultClassLoader();
 		}
+		// 获取指定的资源的URL
 		Enumeration<URL> urls = (classLoaderToUse != null ? classLoaderToUse.getResources(resourceName) :
 				ClassLoader.getSystemResources(resourceName));
 		Properties props = new Properties();

@@ -29,6 +29,8 @@ import java.net.URL;
  * physical form, but a URL or File handle can just be returned for
  * certain resources. The actual behavior is implementation-specific.
  *
+ * 在Spring内部，抽象定义了资源类
+ *
  * @author Juergen Hoeller
  * @since 28.12.2003
  * @see #getInputStream()

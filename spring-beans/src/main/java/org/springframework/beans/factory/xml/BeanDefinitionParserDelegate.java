@@ -73,6 +73,8 @@ import org.springframework.util.xml.DomUtils;
  * {@link BeanDefinitionParser BeanDefinitionParsers} or
  * {@link BeanDefinitionDecorator BeanDefinitionDecorators}.
  *
+ * 有状态的XML解析代理，在这里将实现Spring默认的XML=> BeanDefinition的解析动作
+ *
  * @author Rob Harrop
  * @author Juergen Hoeller
  * @author Rod Johnson
@@ -516,6 +518,8 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
+     * 将Element解析为BeanDefinition
+     *
 	 * Parse the bean definition itself, without regard to name or aliases. May return
 	 * {@code null} if problems occurred during the parsing of the bean definition.
 	 */
@@ -1401,6 +1405,12 @@ public class BeanDefinitionParserDelegate {
 		return parseCustomElement(ele, null);
 	}
 
+    /**
+     * 自定义XML解析，是Spring进行自定义标签拓展的入口
+     * @param ele
+     * @param containingBd
+     * @return
+     */
 	public BeanDefinition parseCustomElement(Element ele, BeanDefinition containingBd) {
 		String namespaceUri = getNamespaceURI(ele);
 		NamespaceHandler handler = this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);

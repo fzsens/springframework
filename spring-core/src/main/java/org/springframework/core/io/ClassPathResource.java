@@ -27,6 +27,9 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ *
+ * 定义在classpath中的额资源，但是支持在Jar中定义的资源，要是用Jar包中的资源，可以使用File类，通过jar://协议完成
+ *
  * {@link Resource} implementation for class path resources. Uses either a
  * given {@link ClassLoader} or a given {@link Class} for loading resources.
  *
