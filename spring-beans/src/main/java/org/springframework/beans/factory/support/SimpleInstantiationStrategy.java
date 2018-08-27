@@ -55,6 +55,16 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 	}
 
 
+    /**
+     * 使用反射方法，实例化bean
+     *
+     * @param bd the bean definition
+     * @param beanName the name of the bean when it's created in this context.
+     * The name can be {@code null} if we're autowiring a bean which doesn't
+     * belong to the factory.
+     * @param owner the owning BeanFactory
+     * @return
+     */
 	@Override
 	public Object instantiate(RootBeanDefinition bd, String beanName, BeanFactory owner) {
 		// Don't override the class with CGLIB if no overrides.
@@ -104,6 +114,18 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 		throw new UnsupportedOperationException("Method Injection not supported in SimpleInstantiationStrategy");
 	}
 
+    /**
+     * 使用反射方法实例化bean
+     *
+     * @param bd the bean definition
+     * @param beanName the name of the bean when it's created in this context.
+     * The name can be {@code null} if we're autowiring a bean which doesn't
+     * belong to the factory.
+     * @param owner the owning BeanFactory
+     * @param ctor the constructor to use
+     * @param args the constructor arguments to apply
+     * @return
+     */
 	@Override
 	public Object instantiate(RootBeanDefinition bd, String beanName, BeanFactory owner,
 			final Constructor<?> ctor, Object... args) {

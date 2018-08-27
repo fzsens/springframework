@@ -104,6 +104,7 @@ class ConstructorResolver {
 		ArgumentsHolder argsHolderToUse = null;
 		Object[] argsToUse = null;
 
+        //显示参数，如果getBean有传递参数则作为显式参数
 		if (explicitArgs != null) {
 			argsToUse = explicitArgs;
 		}
@@ -145,6 +146,7 @@ class ConstructorResolver {
 			if (candidates == null) {
 				Class<?> beanClass = mbd.getBeanClass();
 				try {
+                    // 反射得到构造类列表
 					candidates = (mbd.isNonPublicAccessAllowed() ?
 							beanClass.getDeclaredConstructors() : beanClass.getConstructors());
 				}
@@ -161,6 +163,7 @@ class ConstructorResolver {
 
 			for (int i = 0; i < candidates.length; i++) {
 				Constructor<?> candidate = candidates[i];
+                // 获取不同的构造类的参数类型
 				Class<?>[] paramTypes = candidate.getParameterTypes();
 
 				if (constructorToUse != null && argsToUse.length > paramTypes.length) {
@@ -175,6 +178,7 @@ class ConstructorResolver {
 				ArgumentsHolder argsHolder;
 				if (resolvedValues != null) {
 					try {
+                        // 参数名称
 						String[] paramNames = ConstructorPropertiesChecker.evaluate(candidate, paramTypes.length);
 						if (paramNames == null) {
 							ParameterNameDiscoverer pnd = this.beanFactory.getParameterNameDiscoverer();
@@ -182,6 +186,7 @@ class ConstructorResolver {
 								paramNames = pnd.getParameterNames(candidate);
 							}
 						}
+                        // 创建对应的构造参数，可能从BeanFactory中找到对应类型的Bean实例
 						argsHolder = createArgumentArray(
 								beanName, mbd, resolvedValues, bw, paramTypes, paramNames, candidate, autowiring);
 					}
@@ -249,6 +254,8 @@ class ConstructorResolver {
 			}
 		}
 
+        /** 上都为在上下文和用户参数中，查找和构建，构造函数所需要的参数 {@link argumentsToUse } **/
+
 		try {
 			Object beanInstance;
 
@@ -264,6 +271,7 @@ class ConstructorResolver {
 				}, beanFactory.getAccessControlContext());
 			}
 			else {
+                // 构造实例
 				beanInstance = this.beanFactory.getInstantiationStrategy().instantiate(
 						mbd, beanName, this.beanFactory, constructorToUse, argsToUse);
 			}
