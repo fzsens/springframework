@@ -19,6 +19,9 @@ package org.springframework.beans.factory.config;
 import org.springframework.beans.factory.ObjectFactory;
 
 /**
+ *
+ * 自定义作用域的策略接口
+ *
  * Strategy interface used by a {@link ConfigurableBeanFactory},
  * representing a target scope to hold bean instances in.
  * This allows for extending the BeanFactory's standard scopes

@@ -88,7 +88,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	/** Cache of singleton factories: bean name --> ObjectFactory */
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<String, ObjectFactory<?>>(16);
 
-	/** Cache of early singleton objects: bean name --> bean instance */
+	/** Cache of early singleton objects: bean name --> bean instance 提前暴露的Bean的Cache，用于解决循环依赖*/
 	private final Map<String, Object> earlySingletonObjects = new HashMap<String, Object>(16);
 
 	/** Set of registered singletons, containing the bean names in registration order */
@@ -155,7 +155,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * <p>To be called for eager registration of singletons, e.g. to be able to
 	 * resolve circular references.
 	 * @param beanName the name of the bean
-	 * @param singletonFactory the factory for the singleton object
+	 * @param singletonFactory the factory for the singleton object 用于创建单例的工厂
 	 */
 	protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory) {
 		Assert.notNull(singletonFactory, "Singleton factory must not be null");
@@ -181,14 +181,26 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * @param allowEarlyReference whether early references should be created or not
 	 * @return the registered singleton object, or {@code null} if none found
 	 */
-	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
+	protected Object  getSingleton(String beanName, boolean allowEarlyReference) {
+        /**
+         * 使用 double-check lock 处理并发，从 {@link singletonObjects} 中获取单例
+         */
 		Object singletonObject = this.singletonObjects.get(beanName);
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
+            /**
+             * 如果singletonObjects，并且对应的单例bean实例正在创建中，尝试从{@link earlySingletonObjects }获取
+             * 这样处理，主要为了解决循环依赖的问题
+             * 1. A 依赖于 B ，B 依赖 C，C 依赖 A 形成一个循环，正常在创建的时候，会导致一个死循环
+             * 2. 解决的思路，先创建实例，然后提前暴露，存储在 {@link earlySingletonObjects } 中
+             * 3. 当A->B->C，实例化 C 的时候，就可以顺利获取 A 的引用，完成实例化C
+             * 4. 由于实例之间的引用关系，最终可以顺利实现初始化和关系闭环
+             */
 			synchronized (this.singletonObjects) {
 				singletonObject = this.earlySingletonObjects.get(beanName);
 				if (singletonObject == null && allowEarlyReference) {
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 					if (singletonFactory != null) {
+					    // 使用{@link singletonFactory} 中对应bean的工厂类创建实例
 						singletonObject = singletonFactory.getObject();
 						this.earlySingletonObjects.put(beanName, singletonObject);
 						this.singletonFactories.remove(beanName);
@@ -407,6 +419,9 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	/**
 	 * Register a dependent bean for the given bean,
 	 * to be destroyed before the given bean is destroyed.
+     *
+     * 创建Bean之间的依赖关系
+     *
 	 * @param beanName the name of the bean
 	 * @param dependentBeanName the name of the dependent bean
 	 */
