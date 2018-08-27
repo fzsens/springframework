@@ -236,6 +236,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			final String name, final Class<T> requiredType, final Object[] args, boolean typeCheckOnly)
 			throws BeansException {
 
+	    // beanName，主要处理FactoryBean的&符号
 		final String beanName = transformedBeanName(name);
 		Object bean;
 
