@@ -23,6 +23,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 
 /**
+ * 基于XML的 ApplicationContext 实现，可以作为分析ApplicationContext 这一个系列的入口
+ *
  * Standalone XML application context, taking the context definition files
  * from the class path, interpreting plain paths as class path resource names
  * that include the package path (e.g. "mypackage/myresource.txt"). Useful for
@@ -120,6 +122,8 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 	}
 
 	/**
+     * 初始化
+     *
 	 * Create a new ClassPathXmlApplicationContext with the given parent,
 	 * loading the definitions from the given XML files.
 	 * @param configLocations array of resource locations
@@ -133,9 +137,15 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 	public ClassPathXmlApplicationContext(String[] configLocations, boolean refresh, ApplicationContext parent)
 			throws BeansException {
 
+        /**
+         * 初始化入口
+         */
 		super(parent);
 		setConfigLocations(configLocations);
 		if (refresh) {
+            /**
+             * setConfigLocation 设置配置参数，{@link #refresh()} 开始初始化
+             */
 			refresh();
 		}
 	}

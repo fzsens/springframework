@@ -323,6 +323,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 	/**
+     * 触发事件
+     *
 	 * Publish the given event to all listeners.
 	 * <p>Note: Listeners get initialized after the MessageSource, to be able
 	 * to access it within listener implementations. Thus, MessageSource
@@ -500,44 +502,78 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		return new StandardEnvironment();
 	}
 
+    /**
+     * {@link ApplicationContext } 系列容器的启动入口
+     */
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
 			// Prepare this context for refreshing.
+            // 前置的一些资源准备
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
+            // 获取内部的BeanFactory，ApplicationContext系列，对于Bean的操作，都委托给内部的BeanFactory
+            // 采用 Decorator 设计模式，初始化也是围绕内部的 beanFactory 来完成
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
+            // 为BeanFactory，配置一些前置资源，例如类加载器、环境变量等等
 			prepareBeanFactory(beanFactory);
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
+                // 允许不同的实现类，添加一些 post-process，
+                // 例如 {@link GenericWebApplicationContext} 添加 ServletContextAwareProcessor，用于注入ServletContext，
+                // 环境变量，以及关于Web端的特性作用域
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
+                // 调用注册到BeanFactory中的 factory processors,Spring 将大部分对象都堪称Bean注册到BeanFactory中
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
+                // 注册 bean processors 到beanFactory，如果使用{@link DefaultListableBeanFactory} 注册需要手工完成
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.
+                // 初始化 {@link MessageSource}
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
+                // 初始化事件广播 {@link ApplicationEventMulticaster}
 				initApplicationEventMulticaster();
 
+				/**
+                 *
+                 * 以上两个bean都是注册在BeanFactory中的普通对象，如果用户没有默认注册，则会提供一个默认的实现
+                 *
+                 * **/
+
 				// Initialize other special beans in specific context subclasses.
+                /**
+                 * template 方法，提供给具体实现类做回调使用
+                 */
 				onRefresh();
 
 				// Check for listener beans and register them.
+                /**
+                 * 为事件广播，增加监听器，手工添加或者，BeanFactory中的 {@linnk ApplicationListener} 都会加入到监听队列
+                 * 当调用 {@link #publishEvent(Object)} 时候，可以实现事件监听机制
+                 **/
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
+                /**
+                 * 主要的功能是实例化BeanFactory中的Bean，
+                 * 通过 {@link org.springframework.beans.factory.support.DefaultListableBeanFactory#preInstantiateSingletons()}
+                 * 实现
+                 */
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
+                // 最后一步，发布事件 {@link ContextRefreshedEvent} 表示 {@link #refresh}步骤完成
+                // 同时激活其他例如生命周期监听器等附加的管理工具
 				finishRefresh();
 			}
 
@@ -606,6 +642,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #getBeanFactory()
 	 */
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
+        /**
+         * 在 {@link GenericApplicationContext} 值允许初始化和刷新一次，直接返回构造函数中初始化的BeanFactory
+         * 在 {@link AbstractRefreshableApplicationContext} 中，先销毁Bean，和BeanFactory，并重新创建一个BeanFactory
+         *
+         * 默认的实现类都是 {@link org.springframework.beans.factory.support.DefaultListableBeanFactory}
+         */
 		refreshBeanFactory();
 		ConfigurableListableBeanFactory beanFactory = getBeanFactory();
 		if (logger.isDebugEnabled()) {
@@ -761,6 +803,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			}
 		}
 		else {
+		    // 默认的生命周期处理器
+
 			DefaultLifecycleProcessor defaultProcessor = new DefaultLifecycleProcessor();
 			defaultProcessor.setBeanFactory(beanFactory);
 			this.lifecycleProcessor = defaultProcessor;

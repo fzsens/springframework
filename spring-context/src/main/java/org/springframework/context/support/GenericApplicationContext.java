@@ -34,6 +34,11 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.Assert;
 
 /**
+ *
+ * 包含一个 DefaultListableBeanFactory ，可以通过构造函数传入，或者使用默认
+ *
+ * 增加ApplicationContext的支持
+ *
  * Generic ApplicationContext implementation that holds a single internal
  * {@link org.springframework.beans.factory.support.DefaultListableBeanFactory}
  * instance and does not assume a specific bean definition format. Implements

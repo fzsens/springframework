@@ -735,6 +735,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		return (this.configurationFrozen || super.isBeanEligibleForMetadataCaching(beanName));
 	}
 
+    /**
+     * 如果使用 {@link ApplicationContext} 系列的应用上下文，预先将所有的单例都实例化
+     * 实现的方法，直接调用 getBean() 方法即可
+     * @throws BeansException
+     */
 	@Override
 	public void preInstantiateSingletons() throws BeansException {
 		if (this.logger.isDebugEnabled()) {
