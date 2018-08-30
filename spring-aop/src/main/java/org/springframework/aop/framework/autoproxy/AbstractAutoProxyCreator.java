@@ -237,6 +237,13 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		return wrapIfNecessary(bean, beanName, cacheKey);
 	}
 
+    /**
+     * 在Bean实例化之前的拓展
+     * @param beanClass the class of the bean to be instantiated
+     * @param beanName the name of the bean
+     * @return 如果返回null，则使用默认的初始化过程，如果返回值不为null，则使用返回值作为实例
+     * @throws BeansException
+     */
 	@Override
 	public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
 		Object cacheKey = getCacheKey(beanClass, beanName);
@@ -298,6 +305,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 				return wrapIfNecessary(bean, beanName, cacheKey);
 			}
 		}
+        // 返回代理对象
 		return bean;
 	}
 

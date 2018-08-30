@@ -49,6 +49,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * 根据{@link BeanFactory} 中的bean，生成对应的AOP代理对象
+ *
  * {@link org.springframework.beans.factory.FactoryBean} implementation that builds an
  * AOP proxy based on beans in Spring {@link org.springframework.beans.factory.BeanFactory}.
  *
