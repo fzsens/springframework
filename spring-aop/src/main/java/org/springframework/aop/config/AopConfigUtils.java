@@ -86,6 +86,12 @@ public abstract class AopConfigUtils {
 		return registerAspectJAnnotationAutoProxyCreatorIfNecessary(registry, null);
 	}
 
+    /**
+     * 生成 {@link AnnotationAwareAspectJAutoProxyCreator} 的{@link BeanDefinition}
+     * @param registry
+     * @param source
+     * @return
+     */
 	public static BeanDefinition registerAspectJAnnotationAutoProxyCreatorIfNecessary(BeanDefinitionRegistry registry, Object source) {
 		return registerOrEscalateApcAsRequired(AnnotationAwareAspectJAutoProxyCreator.class, registry, source);
 	}
@@ -105,19 +111,34 @@ public abstract class AopConfigUtils {
 	}
 
 
+    /**
+     * 注册 AnnotationAwareAspectJAutoProxyCreator
+     * @param cls AnnotationAwareAspectJAutoProxyCreator
+     * @param registry
+     * @param source
+     * @return
+     */
 	private static BeanDefinition registerOrEscalateApcAsRequired(Class<?> cls, BeanDefinitionRegistry registry, Object source) {
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
+		// 如果已经存在对应的 org.springframework.aop.config.internalAutoProxyCreator BeanDefinition
 		if (registry.containsBeanDefinition(AUTO_PROXY_CREATOR_BEAN_NAME)) {
 			BeanDefinition apcDefinition = registry.getBeanDefinition(AUTO_PROXY_CREATOR_BEAN_NAME);
+			// 并且类型不一样
 			if (!cls.getName().equals(apcDefinition.getBeanClassName())) {
 				int currentPriority = findPriorityForClass(apcDefinition.getBeanClassName());
 				int requiredPriority = findPriorityForClass(cls);
+				/**
+                 * 根据优先级来确定哪一个需要执行，优先级依次为
+                 * AnnotationAwareAspectJAutoProxyCreator > AspectJAwareAdvisorAutoProxyCreator > InfrastructureAdvisorAutoProxyCreator
+                 */
 				if (currentPriority < requiredPriority) {
+				    // 改变代理创建器的实现类
 					apcDefinition.setBeanClassName(cls.getName());
 				}
 			}
 			return null;
 		}
+		// 如果不存在，注册一个
 		RootBeanDefinition beanDefinition = new RootBeanDefinition(cls);
 		beanDefinition.setSource(source);
 		beanDefinition.getPropertyValues().add("order", Ordered.HIGHEST_PRECEDENCE);

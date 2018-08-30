@@ -22,6 +22,9 @@ import java.util.List;
 import org.springframework.util.Assert;
 
 /**
+ *
+ * 组合一个或者多个 {@link BeanComponentDefinition}
+ *
  * {@link ComponentDefinition} implementation that holds one or more nested
  * {@link ComponentDefinition} instances, aggregating them into a named group
  * of components.

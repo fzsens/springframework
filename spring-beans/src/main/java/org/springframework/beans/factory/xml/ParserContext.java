@@ -94,6 +94,10 @@ public final class ParserContext {
 				(CompositeComponentDefinition) this.containingComponents.lastElement() : null);
 	}
 
+    /**
+     * 初始化 {@link CompositeComponentDefinition} 之后的 {@link BeanComponentDefinition} 会聚合到这个对象中
+     * @param containingComponent
+     */
 	public void pushContainingComponent(CompositeComponentDefinition containingComponent) {
 		this.containingComponents.push(containingComponent);
 	}
@@ -106,6 +110,13 @@ public final class ParserContext {
 		registerComponent(popContainingComponent());
 	}
 
+    /**
+     * 将 component 放入 {@link CompositeComponentDefinition} 容器中，用于保存{@link ComponentDefinition}
+     * 可以跟踪Bean注册的先后顺序
+     *
+     * 如果 {@link CompositeComponentDefinition} 容器没有事先初始化，则触发注册事件
+     * @param component
+     */
 	public void registerComponent(ComponentDefinition component) {
 		CompositeComponentDefinition containingComponent = getContainingComponent();
 		if (containingComponent != null) {

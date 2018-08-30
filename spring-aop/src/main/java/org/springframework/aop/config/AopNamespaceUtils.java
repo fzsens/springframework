@@ -16,6 +16,7 @@
 
 package org.springframework.aop.config;
 
+import org.springframework.beans.factory.parsing.ReaderEventListener;
 import org.w3c.dom.Element;
 
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -72,25 +73,39 @@ public abstract class AopNamespaceUtils {
 
 	public static void registerAspectJAnnotationAutoProxyCreatorIfNecessary(
 			ParserContext parserContext, Element sourceElement) {
-
+        /**
+         * 定义 {@link org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator }
+         */
 		BeanDefinition beanDefinition = AopConfigUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary(
 				parserContext.getRegistry(), parserContext.extractSource(sourceElement));
+        /**
+         * proxy-target-class 属性：是否启动对类的代理，如果启用，后续会创建基于cglib的动态代理，否则默认使用jdk动态代理
+         * expose-class 属性：它的作用是使AopContext.currentProxy()能拿到当前的代理，基于{@link ThreadLocal}可以在对应的类获取代理类
+         */
 		useClassProxyingIfNecessary(parserContext.getRegistry(), sourceElement);
+        /**
+         * 之前在 {@link ParserContext} 中有声明 {@link org.springframework.beans.factory.parsing.CompositeComponentDefinition}
+         * 则将当前{@link BeanDefinition} 添加到其中
+         * 主要用于跟踪BeanDefinition的定义，触发在{@link XmlBeanDefinitionReader} 中的 {@link ReaderEventListener}监听 BeanDefinition 注册事件
+         */
 		registerComponentIfNecessary(beanDefinition, parserContext);
 	}
 
 	private static void useClassProxyingIfNecessary(BeanDefinitionRegistry registry, Element sourceElement) {
 		if (sourceElement != null) {
+		    // proxy-target-class = true
 			boolean proxyTargetClass = Boolean.valueOf(sourceElement.getAttribute(PROXY_TARGET_CLASS_ATTRIBUTE));
 			if (proxyTargetClass) {
 				AopConfigUtils.forceAutoProxyCreatorToUseClassProxying(registry);
 			}
+			// expose-class = true
 			boolean exposeProxy = Boolean.valueOf(sourceElement.getAttribute(EXPOSE_PROXY_ATTRIBUTE));
 			if (exposeProxy) {
 				AopConfigUtils.forceAutoProxyCreatorToExposeProxy(registry);
 			}
 		}
 	}
+
 
 	private static void registerComponentIfNecessary(BeanDefinition beanDefinition, ParserContext parserContext) {
 		if (beanDefinition != null) {

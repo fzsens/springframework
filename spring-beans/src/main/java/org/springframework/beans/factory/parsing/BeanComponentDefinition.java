@@ -26,6 +26,9 @@ import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.BeanReference;
 
 /**
+ *
+ * 将{@link BeanDefinition}内部的引用和{@link BeanDefinition} 暴露访问方法
+ *
  * ComponentDefinition based on a standard BeanDefinition, exposing the given bean
  * definition as well as inner bean definitions and bean references for the given bean.
  *

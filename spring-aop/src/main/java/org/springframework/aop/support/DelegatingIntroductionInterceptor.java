@@ -105,6 +105,7 @@ public class DelegatingIntroductionInterceptor extends IntroductionInfoSupport
 			// Using the following method rather than direct reflection, we
 			// get correct handling of InvocationTargetException
 			// if the introduced method throws an exception.
+            // 通过反射调用委托类
 			Object retVal = AopUtils.invokeJoinpointUsingReflection(this.delegate, mi.getMethod(), mi.getArguments());
 
 			// Massage return value if possible: if the delegate returned itself,

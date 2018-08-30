@@ -47,7 +47,7 @@ public class DefaultScopedObject implements ScopedObject, Serializable {
 	 * @param beanFactory the {@link ConfigurableBeanFactory} that holds the scoped target object
 	 * @param targetBeanName the name of the target bean
 	 */
-	public DefaultScopedObject(ConfigurableBeanFactory beanFactory, String targetBeanName) {
+	public  DefaultScopedObject(ConfigurableBeanFactory beanFactory, String targetBeanName) {
 		Assert.notNull(beanFactory, "BeanFactory must not be null");
 		Assert.hasText(targetBeanName, "'targetBeanName' must not be empty");
 		this.beanFactory = beanFactory;
@@ -57,6 +57,7 @@ public class DefaultScopedObject implements ScopedObject, Serializable {
 
 	@Override
 	public Object getTargetObject() {
+	    // 每次都从BeanFactory中获取最新的bean即可
 		return this.beanFactory.getBean(this.targetBeanName);
 	}
 
