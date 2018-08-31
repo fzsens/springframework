@@ -106,7 +106,7 @@ public class BeanFactoryAspectInstanceFactory implements MetadataAwareAspectInst
 	 * at the class level.
 	 * @see org.springframework.core.Ordered
 	 * @see org.springframework.core.annotation.Order
-	 */
+	 **/
 	@Override
 	public int getOrder() {
 		Class<?> type = this.beanFactory.getType(this.name);

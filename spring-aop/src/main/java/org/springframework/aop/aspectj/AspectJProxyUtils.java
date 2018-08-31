@@ -46,11 +46,13 @@ public abstract class AspectJProxyUtils {
 			for (Advisor advisor : advisors) {
 				// Be careful not to get the Advice without a guard, as
 				// this might eagerly instantiate a non-singleton AspectJ aspect
+                // 判断是否AspectJ风格的增强
 				if (isAspectJAdvice(advisor)) {
 					foundAspectJAdvice = true;
 				}
 			}
 			if (foundAspectJAdvice && !advisors.contains(ExposeInvocationInterceptor.ADVISOR)) {
+			    // 添加 {@link ExposeInvocationInterceptor}
 				advisors.add(0, ExposeInvocationInterceptor.ADVISOR);
 				return true;
 			}

@@ -19,6 +19,9 @@ package org.springframework.aop.aspectj;
 import org.springframework.core.Ordered;
 
 /**
+ *
+ * 生成切面
+ *
  * Interface implemented to provide an instance of an AspectJ aspect.
  * Decouples from Spring's bean factory.
  *

@@ -17,6 +17,10 @@
 package org.springframework.aop;
 
 /**
+ * 用于包装目标对象，可以在AOP代理中被JoinPoint使用，使用{@link TargetSource} 对target进行一些自定义，例如实现池化或者支持热更新
+ *
+ * 例如 {@link  HotSwappableTargetSource } 缓存target，同时允许运行时进行替换
+ *
  * A {@code TargetSource} is used to obtain the current "target" of
  * an AOP invocation, which will be invoked via reflection if no around
  * advice chooses to end the interceptor chain itself.

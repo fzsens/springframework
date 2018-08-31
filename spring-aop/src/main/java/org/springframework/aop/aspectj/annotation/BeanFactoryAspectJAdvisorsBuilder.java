@@ -73,6 +73,8 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 
 
 	/**
+     * 在BeanFactory中，查找使用 AspectJ 风格注解的Bean，构建成{@link Advisor}
+     *
 	 * Look for AspectJ-annotated aspect beans in the current bean factory,
 	 * and return to a list of Spring AOP Advisors representing them.
 	 * <p>Creates a Spring Advisor for each AspectJ advice method.
@@ -87,9 +89,11 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 			if (aspectNames == null) {
 				List<Advisor> advisors = new LinkedList<Advisor>();
 				aspectNames = new LinkedList<String>();
+				// 获取所有的Bean名
 				String[] beanNames =
 						BeanFactoryUtils.beanNamesForTypeIncludingAncestors(this.beanFactory, Object.class, true, false);
 				for (String beanName : beanNames) {
+				    // package 是否符合自动扫描路径
 					if (!isEligibleBean(beanName)) {
 						continue;
 					}
@@ -100,14 +104,20 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 					if (beanType == null) {
 						continue;
 					}
+					// 判断是否有 {@link Aspect} 注解
 					if (this.advisorFactory.isAspect(beanType)) {
 						aspectNames.add(beanName);
+						// 构建Aspect的元数据
 						AspectMetadata amd = new AspectMetadata(beanType, beanName);
-						if (amd.getAjType().getPerClause().getKind() == PerClauseKind.SINGLETON) {
-							MetadataAwareAspectInstanceFactory factory =
+                        // 根据AspectJ 语法，可以生成不同类型的切面
+                        if (amd.getAjType().getPerClause().getKind() == PerClauseKind.SINGLETON) {
+                            // singleton:  单例模式, 即切面只会有一个实例
+                            MetadataAwareAspectInstanceFactory factory =
 									new BeanFactoryAspectInstanceFactory(this.beanFactory, beanName);
+                            // 创建 Advisors
 							List<Advisor> classAdvisors = this.advisorFactory.getAdvisors(factory);
 							if (this.beanFactory.isSingleton(beanName)) {
+							    // advisorsCache缓存Advisor
 								this.advisorsCache.put(beanName, classAdvisors);
 							}
 							else {
@@ -116,6 +126,8 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 							advisors.addAll(classAdvisors);
 						}
 						else {
+						    // perthis: 原型模型, 每个切入点表达式匹配的连接点对应的AOP对象都会创建一个新切面实例
+                            // pertarget: 原型模型, 每个切入点表达式匹配的连接点对应的目标对象都会创建一个新的切面实例
 							// Per target or per this.
 							if (this.beanFactory.isSingleton(beanName)) {
 								throw new IllegalArgumentException("Bean with name '" + beanName +

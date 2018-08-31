@@ -165,6 +165,9 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 
 
 	/**
+     *
+     * 获取带有AspectJ 风格的Advice注解
+     *
 	 * Find and return the first AspectJ annotation on the given method
 	 * (there <i>should</i> only be one anyway...)
 	 */

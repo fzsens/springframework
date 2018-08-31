@@ -43,6 +43,11 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
 
 /**
+ *
+ * AOP 代理的配置管理，管理AOP 代理生成过程中需要用到配置，例如 Advice 和Advisor
+ *
+ * 这个类只负责进行属性的管理，具体的创建，在子类，比如 {@link ProxyFactory } 中实现
+ *
  * Base class for AOP proxy configuration managers.
  * These are not themselves AOP proxies, but subclasses of this class are
  * normally factories from which AOP proxy instances are obtained directly.

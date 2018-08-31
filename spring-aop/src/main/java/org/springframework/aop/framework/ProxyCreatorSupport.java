@@ -95,6 +95,10 @@ public class ProxyCreatorSupport extends AdvisedSupport {
 
 
 	/**
+     *
+     * 创建{@link AopProxy} ,主要的实现有 {@link JdkDynamicAopProxy} 和 {@link ObjenesisCglibAopProxy}
+     *
+     * 用于生成具体的业务Bean代理
 	 * Subclasses should call this to get a new AOP proxy. They should <b>not</b>
 	 * create an AOP proxy with {@code this} as an argument.
 	 */

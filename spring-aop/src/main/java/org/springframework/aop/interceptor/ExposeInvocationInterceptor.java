@@ -27,6 +27,10 @@ import org.springframework.core.NamedThreadLocal;
 import org.springframework.core.PriorityOrdered;
 
 /**
+ *
+ * 使用{@link ThreadLocal} 将当前的 {@link MethodInvocation} 保存在线程变量中
+ * ，通过 {#link ExposeInvocationInterceptor#currentInvocation()} 获取
+ *
  * Interceptor that exposes the current {@link org.aopalliance.intercept.MethodInvocation}
  * as a thread-local object. We occasionally need to do this; for example, when a pointcut
  * (e.g. an AspectJ expression pointcut) needs to know the full invocation context.
@@ -87,11 +91,14 @@ public class ExposeInvocationInterceptor implements MethodInterceptor, PriorityO
 	@Override
 	public Object invoke(MethodInvocation mi) throws Throwable {
 		MethodInvocation oldInvocation = invocation.get();
+
+		// 设置 MethodInvocation
 		invocation.set(mi);
 		try {
 			return mi.proceed();
 		}
 		finally {
+		    // 清空
 			invocation.set(oldInvocation);
 		}
 	}
