@@ -464,6 +464,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			Class<?> beanClass, String beanName, Object[] specificInterceptors, TargetSource targetSource) {
 
 		if (this.beanFactory instanceof ConfigurableListableBeanFactory) {
+		    // 将原始的Bean类型，作为代理BeanDefinition的一个属性 :originalTargetClass
 			AutoProxyUtils.exposeTargetClass((ConfigurableListableBeanFactory) this.beanFactory, beanName, beanClass);
 		}
 
@@ -471,6 +472,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
          * 创建代理工厂
          */
 		ProxyFactory proxyFactory = new ProxyFactory();
+		// ProxyConfig 配置属性设置
 		proxyFactory.copyFrom(this);
 
 		if (!proxyFactory.isProxyTargetClass()) {
@@ -489,7 +491,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			proxyFactory.addAdvisor(advisor);
 		}
 
-		// 设置目标源
+		// 设置被代理对象
 		proxyFactory.setTargetSource(targetSource);
 		// template方法，实现类可以进行定制
 		customizeProxyFactory(proxyFactory);
@@ -541,35 +543,39 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 * @return the list of Advisors for the given bean
 	 */
 	protected Advisor[] buildAdvisors(String beanName, Object[] specificInterceptors) {
-		// Handle prototypes correctly...
-		Advisor[] commonInterceptors = resolveInterceptorNames();
+        // Handle prototypes correctly...
+        // 如果this.beanFactry不是 {@link ConfigurableBeanFactory}
+        // 则从BeanFactory重新取出Interceptor，在Spring AOP中为各种{@link Advice}
+        // 并解析包装成{@link Advisor}
+        Advisor[] commonInterceptors = resolveInterceptorNames();
 
-		List<Object> allInterceptors = new ArrayList<Object>();
-		if (specificInterceptors != null) {
-			allInterceptors.addAll(Arrays.asList(specificInterceptors));
-			if (commonInterceptors.length > 0) {
-				if (this.applyCommonInterceptorsFirst) {
-					allInterceptors.addAll(0, Arrays.asList(commonInterceptors));
-				}
-				else {
-					allInterceptors.addAll(Arrays.asList(commonInterceptors));
-				}
-			}
-		}
-		if (logger.isDebugEnabled()) {
-			int nrOfCommonInterceptors = commonInterceptors.length;
-			int nrOfSpecificInterceptors = (specificInterceptors != null ? specificInterceptors.length : 0);
-			logger.debug("Creating implicit proxy for bean '" + beanName + "' with " + nrOfCommonInterceptors +
-					" common interceptors and " + nrOfSpecificInterceptors + " specific interceptors");
-		}
+        // 构建所有的拦截器 {@link Advice} 或者 {@link Advisor}
+        List<Object> allInterceptors = new ArrayList<Object>();
+        if (specificInterceptors != null) {
+            allInterceptors.addAll(Arrays.asList(specificInterceptors));
+            if (commonInterceptors.length > 0) {
+                if (this.applyCommonInterceptorsFirst) {
+                    allInterceptors.addAll(0, Arrays.asList(commonInterceptors));
+                }
+                else {
+                    allInterceptors.addAll(Arrays.asList(commonInterceptors));
+                }
+            }
+        }
+        if (logger.isDebugEnabled()) {
+            int nrOfCommonInterceptors = commonInterceptors.length;
+            int nrOfSpecificInterceptors = (specificInterceptors != null ? specificInterceptors.length : 0);
+            logger.debug("Creating implicit proxy for bean '" + beanName + "' with " + nrOfCommonInterceptors +
+                    " common interceptors and " + nrOfSpecificInterceptors + " specific interceptors");
+        }
 
-		Advisor[] advisors = new Advisor[allInterceptors.size()];
-		for (int i = 0; i < allInterceptors.size(); i++) {
-		    // 将增强/Advisor 转换成为 Advisor
-			advisors[i] = this.advisorAdapterRegistry.wrap(allInterceptors.get(i));
-		}
-		return advisors;
-	}
+        Advisor[] advisors = new Advisor[allInterceptors.size()];
+        for (int i = 0; i < allInterceptors.size(); i++) {
+            // 将Advice/Advisor 转换成为 Advisor
+            advisors[i] = this.advisorAdapterRegistry.wrap(allInterceptors.get(i));
+        }
+        return advisors;
+    }
 
 	/**
 	 * Resolves the specified interceptor names to Advisor objects.
@@ -580,8 +586,12 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 				(ConfigurableBeanFactory) this.beanFactory : null);
 		List<Advisor> advisors = new ArrayList<Advisor>();
 		for (String beanName : this.interceptorNames) {
+		    // 这段的含义不是特别清楚，猜测是在自定义BeanFactory的时候，每次都从BeanFactory中重新取出Bean
+            // 以便正确处理不同作用域的Bean
 			if (cbf == null || !cbf.isCurrentlyInCreation(beanName)) {
-				Object next = this.beanFactory.getBean(beanName);
+				// 从BeanFactory中取出Bean
+			    Object next = this.beanFactory.getBean(beanName);
+				// 将Advice 包装成为 Advisor
 				advisors.add(this.advisorAdapterRegistry.wrap(next));
 			}
 		}

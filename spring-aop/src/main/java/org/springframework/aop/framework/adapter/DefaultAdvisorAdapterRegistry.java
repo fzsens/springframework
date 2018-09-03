@@ -55,6 +55,9 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 
 	@Override
 	public Advisor wrap(Object adviceObject) throws UnknownAdviceTypeException {
+        /**
+         * 根据不同的类型，转换成为{@link Advior} 一般为{@link DefaultPointcutAdvisor}
+         */
 		if (adviceObject instanceof Advisor) {
 			return (Advisor) adviceObject;
 		}
