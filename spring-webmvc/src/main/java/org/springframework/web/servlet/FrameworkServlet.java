@@ -65,6 +65,9 @@ import org.springframework.web.util.NestedServletException;
 import org.springframework.web.util.WebUtils;
 
 /**
+ *
+ * 将Servlet和Spring的IoC容器上下文关联，实际上初始化 {@link #webApplicationContext}，它代表SpringMVC上下文
+ * 也可以为其设置父上下文，也就是在{@link org.springframework.web.context.ContextLoaderListener} 监听器初始化的容器上下文
  * Base servlet for Spring's web framework. Provides integration with
  * a Spring application context, in a JavaBean-based overall solution.
  *
@@ -555,6 +558,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			// Either the context is not a ConfigurableApplicationContext with refresh
 			// support or the context injected at construction time had already been
 			// refreshed -> trigger initial onRefresh manually here.
+            // 触发{@link DispatcherServlet}的初始化
 			onRefresh(wac);
 		}
 

@@ -86,6 +86,9 @@ public class HandlerExecutionChain {
 		return this.handler;
 	}
 
+    /**
+     * @param interceptor 拦截器
+     */
 	public void addInterceptor(HandlerInterceptor interceptor) {
 		initInterceptorList().add(interceptor);
 	}

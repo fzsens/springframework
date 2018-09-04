@@ -60,6 +60,11 @@ import org.springframework.web.util.NestedServletException;
 import org.springframework.web.util.WebUtils;
 
 /**
+ *
+ * Spring MVC 的核心分发器，初始化各个功能模块的实现类，比如：异常处理、视图处理、请求映射处理等
+ *
+ * 分发入口{@link #doService(HttpServletRequest, HttpServletResponse)}
+ *
  * Central dispatcher for HTTP request handlers/controllers, e.g. for web UI controllers
  * or HTTP-based remote service exporters. Dispatches to registered handlers for processing
  * a web request, providing convenient mapping and exception handling facilities.
@@ -468,6 +473,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 
 	/**
+     * 实现模板方法，被{@link FrameworkServlet#initWebApplicationContext} 调用
 	 * This implementation calls {@link #initStrategies}.
 	 */
 	@Override
@@ -872,6 +878,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		// to be able to restore the original attributes after the include.
 		Map<String, Object> attributesSnapshot = null;
 		if (WebUtils.isIncludeRequest(request)) {
+		    // 处理include的请求，保存一份属性快照，之后会覆盖include之后的request中的属性
 			attributesSnapshot = new HashMap<String, Object>();
 			Enumeration<?> attrNames = request.getAttributeNames();
 			while (attrNames.hasMoreElements()) {
@@ -883,6 +890,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 
 		// Make framework objects available to handlers and view objects.
+        // 为request设置必要的上下文参数
 		request.setAttribute(WEB_APPLICATION_CONTEXT_ATTRIBUTE, getWebApplicationContext());
 		request.setAttribute(LOCALE_RESOLVER_ATTRIBUTE, this.localeResolver);
 		request.setAttribute(THEME_RESOLVER_ATTRIBUTE, this.themeResolver);
@@ -896,6 +904,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		request.setAttribute(FLASH_MAP_MANAGER_ATTRIBUTE, this.flashMapManager);
 
 		try {
+		    // 处理请求
 			doDispatch(request, response);
 		}
 		finally {
@@ -961,6 +970,7 @@ public class DispatcherServlet extends FrameworkServlet {
 					}
 				}
 
+				// 前置拦截器处理
 				if (!mappedHandler.applyPreHandle(processedRequest, response)) {
 					return;
 				}
@@ -973,6 +983,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				}
 
 				applyDefaultViewName(processedRequest, mv);
+				// 后置拦截器处理
 				mappedHandler.applyPostHandle(processedRequest, response, mv);
 			}
 			catch (Exception ex) {

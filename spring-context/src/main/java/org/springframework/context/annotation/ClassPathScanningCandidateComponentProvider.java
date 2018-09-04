@@ -265,6 +265,9 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	public Set<BeanDefinition> findCandidateComponents(String basePackage) {
 		Set<BeanDefinition> candidates = new LinkedHashSet<BeanDefinition>();
 		try {
+            /**
+             * 构建 classpath*:packageXX/X.class
+             */
 			String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +
 					resolveBasePackage(basePackage) + "/" + this.resourcePattern;
 			Resource[] resources = this.resourcePatternResolver.getResources(packageSearchPath);

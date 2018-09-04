@@ -46,6 +46,10 @@ import org.springframework.web.context.support.ServletContextResourceLoader;
 import org.springframework.web.context.support.StandardServletEnvironment;
 
 /**
+ *
+ * 做一些初始化工作，将web.xml中配置的参数，设置到Servlet中，比如Servlet中的init-param标签中配置的参数
+ *
+ *
  * Simple extension of {@link javax.servlet.http.HttpServlet} which treats
  * its config parameters ({@code init-param} entries within the
  * {@code servlet} tag in {@code web.xml}) as bean properties.

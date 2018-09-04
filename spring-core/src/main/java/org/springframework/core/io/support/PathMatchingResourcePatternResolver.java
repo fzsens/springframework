@@ -324,6 +324,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	protected Set<Resource> doFindAllClassPathResources(String path) throws IOException {
 		Set<Resource> result = new LinkedHashSet<Resource>(16);
 		ClassLoader cl = getClassLoader();
+		// 获取resource资源
 		Enumeration<URL> resourceUrls = (cl != null ? cl.getResources(path) : ClassLoader.getSystemResources(path));
 		while (resourceUrls.hasMoreElements()) {
 			URL url = resourceUrls.nextElement();
@@ -411,6 +412,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	 */
 	protected Resource[] findPathMatchingResources(String locationPattern) throws IOException {
 		String rootDirPath = determineRootDir(locationPattern);
+		//**.*.class 后缀
 		String subPattern = locationPattern.substring(rootDirPath.length());
 		Resource[] rootDirResources = getResources(rootDirPath);
 		Set<Resource> result = new LinkedHashSet<Resource>(16);
@@ -686,6 +688,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	}
 
 	/**
+     * 递归取出Class的url
 	 * Recursively retrieve files that match the given pattern,
 	 * adding them to the given result list.
 	 * @param fullPattern the pattern to match against,
@@ -699,6 +702,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 			logger.debug("Searching directory [" + dir.getAbsolutePath() +
 					"] for files matching pattern [" + fullPattern + "]");
 		}
+		// baseDir 下的所有文件
 		File[] dirContents = dir.listFiles();
 		if (dirContents == null) {
 			if (logger.isWarnEnabled()) {
@@ -716,9 +720,11 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 					}
 				}
 				else {
+				    // 迭代
 					doRetrieveMatchingFiles(fullPattern, content, result);
 				}
 			}
+			// ANT 匹配模式
 			if (getPathMatcher().match(fullPattern, currPath)) {
 				result.add(content);
 			}
