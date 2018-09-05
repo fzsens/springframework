@@ -348,8 +348,10 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	 */
 	@Override
 	public final HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+	    // 获取 Handler
 		Object handler = getHandlerInternal(request);
 		if (handler == null) {
+		    // 未找到Handler
 			handler = getDefaultHandler();
 		}
 		if (handler == null) {
@@ -358,6 +360,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 		// Bean name or resolved handler?
 		if (handler instanceof String) {
 			String handlerName = (String) handler;
+			// 从上下文中获取Handler
 			handler = getApplicationContext().getBean(handlerName);
 		}
 

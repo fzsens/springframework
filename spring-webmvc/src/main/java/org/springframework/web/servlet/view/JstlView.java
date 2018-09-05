@@ -24,6 +24,9 @@ import org.springframework.web.servlet.support.JstlUtils;
 import org.springframework.web.servlet.support.RequestContext;
 
 /**
+ *
+ * Jstl是JSP的View解析
+ *
  * Specialization of {@link InternalResourceView} for JSTL pages,
  * i.e. JSP pages that use the JSP Standard Tag Library.
  *

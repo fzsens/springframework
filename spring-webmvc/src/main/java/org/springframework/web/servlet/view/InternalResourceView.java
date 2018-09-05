@@ -128,6 +128,7 @@ public class InternalResourceView extends AbstractUrlBasedView {
 
 
 	/**
+     * 渲染模型
 	 * Render the internal resource given the specified model.
 	 * This includes setting the model as request attributes.
 	 */
@@ -136,6 +137,7 @@ public class InternalResourceView extends AbstractUrlBasedView {
 			Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		// Expose the model object as request attributes.
+        // 设置Request的属性
 		exposeModelAsRequestAttributes(model, request);
 
 		// Expose helpers as request attributes, if any.
@@ -145,6 +147,7 @@ public class InternalResourceView extends AbstractUrlBasedView {
 		String dispatcherPath = prepareForRendering(request, response);
 
 		// Obtain a RequestDispatcher for the target resource (typically a JSP).
+        // 模型绑定JSP
 		RequestDispatcher rd = getRequestDispatcher(request, dispatcherPath);
 		if (rd == null) {
 			throw new ServletException("Could not get RequestDispatcher for [" + getUrl() +
@@ -161,6 +164,7 @@ public class InternalResourceView extends AbstractUrlBasedView {
 		}
 
 		else {
+		    // 转发请求到内部定义好的资源，比如JSP页面，具体的渲染由web容器完成 view 只是起到转发请求的作用
 			// Note: The forwarded resource is supposed to determine the content type itself.
 			if (logger.isDebugEnabled()) {
 				logger.debug("Forwarding to resource [" + getUrl() + "] in InternalResourceView '" + getBeanName() + "'");

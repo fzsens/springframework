@@ -286,6 +286,7 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 
 
 	/**
+     * 渲染输出
 	 * Prepares the view given the specified model, merging it with static
 	 * attributes and a RequestContext attribute, if necessary.
 	 * Delegates to renderMergedOutputModel for the actual rendering.
@@ -297,9 +298,10 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 			logger.trace("Rendering view with name '" + this.beanName + "' with model " + model +
 				" and static attributes " + this.staticAttributes);
 		}
-
+		// 合并数据模型
 		Map<String, Object> mergedModel = createMergedOutputModel(model, request, response);
 		prepareResponse(request, response);
+		// 展现模型数据到视图的调用方法
 		renderMergedOutputModel(mergedModel, getRequestToExpose(request), response);
 	}
 
