@@ -1130,7 +1130,8 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
-     * 从 {@link #handlerMappings} 中获取 Handler
+     * 从 {@link #handlerMappings} 中获取 Handler，
+     * 一般使用SimpleUrlHandlerMapping 或者 BeanNameUrlHandlerMapping，HandlerMapping 可以看做是一个映射器，每一种类型一个
 	 * Return the HandlerExecutionChain for this request.
 	 * <p>Tries all handler mappings in order.
 	 * @param request current HTTP request
