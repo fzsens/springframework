@@ -21,6 +21,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 /**
+ *
+ * 如果BeanName 使用 / 开头，则生成对应的额HandlerMapping，作为一个MVC的对外映射接口
+ *
+ * {@link org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping}
+ *
  * Implementation of {@link org.springframework.web.servlet.HandlerMapping} that
  * follows a simple convention for generating URL path mappings from the <i>class names</i>
  * of registered {@link org.springframework.web.servlet.mvc.Controller} beans
