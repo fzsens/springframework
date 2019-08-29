@@ -21,14 +21,19 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.core.type.AnnotationMetadata;
 
 /**
+ * 此接口主要用于自定义注册 BeanDefinition
+ *
  * Interface to be implemented by types that register additional bean definitions when
  * processing @{@link Configuration} classes. Useful when operating at the bean definition
  * level (as opposed to {@code @Bean} method/instance level) is desired or necessary.
+ *
+ * Configuration 和 ImportSelector 也是起到类似的作用，在 Spring 的各种 EnableXXX 中广泛使用
  *
  * <p>Along with {@code @Configuration} and {@link ImportSelector}, classes of this type
  * may be provided to the @{@link Import} annotation (or may also be returned from an
  * {@code ImportSelector}).
  *
+ * ImportBeanDefinitionRegistrar 还可以实现各种 Aware 注入，会在 {@link #registerBeanDefinitions} 之前被调用
  * <p>An {@link ImportBeanDefinitionRegistrar} may implement any of the following
  * {@link org.springframework.beans.factory.Aware Aware} interfaces, and their respective
  * methods will be called prior to {@link #registerBeanDefinitions}:
