@@ -23,6 +23,8 @@ package org.springframework.aop;
  * Both these basic terms and a Pointcut itself can be combined to build up combinations
  * (e.g. through {@link org.springframework.aop.support.ComposablePointcut}).
  *
+ * 切入点，如何匹配连接，也就是定义如何识别一个连接点是否是要切入的地方
+ *
  * @author Rod Johnson
  * @see ClassFilter
  * @see MethodMatcher

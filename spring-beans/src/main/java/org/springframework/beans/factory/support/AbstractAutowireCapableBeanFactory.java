@@ -481,7 +481,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
         try {
             // Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
-            // 使用BeanPostProcessor干预Bean的生命周期，这是初始化阶段
+            // 使用 BeanPostProcessor 干预 Bean 的生命周期，这是初始化阶段
             // 对应的Processor为{@link InstantiationAwareBeanPostProcessor}
             Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
             if (bean != null) {
@@ -983,6 +983,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
                 Class<?> targetType = determineTargetType(beanName, mbd);
                 if (targetType != null) {
+                    // 前后切面通过 BeanPostProcessor 对 Bean 进行干预
                     bean = applyBeanPostProcessorsBeforeInstantiation(targetType, beanName);
                     if (bean != null) {
                         bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);

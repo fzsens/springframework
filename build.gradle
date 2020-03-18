@@ -1125,21 +1125,21 @@ project("spring-framework-bom") {
 	}
 }
 
-apply plugin: 'sonar-runner'
-
-sonarRunner {
-	sonarProperties {
-		property "sonar.projectName", "Spring Framework"
-		property "sonar.profile", "Spring Framework"
-		property "sonar.jacoco.reportPath", "${buildDir.name}/jacoco.exec"
-		property "sonar.links.homepage", linkHomepage
-		property "sonar.links.ci", linkCi
-		property "sonar.links.issue", linkIssue
-		property "sonar.links.scm", linkScmUrl
-		property "sonar.links.scm_dev", linkScmDevConnection
-		property "sonar.java.coveragePlugin", "jacoco"
-	}
-}
+//apply plugin: 'sonar-runner'
+//
+//sonarRunner {
+//	sonarProperties {
+//		property "sonar.projectName", "Spring Framework"
+//		property "sonar.profile", "Spring Framework"
+//		property "sonar.jacoco.reportPath", "${buildDir.name}/jacoco.exec"
+//		property "sonar.links.homepage", linkHomepage
+//		property "sonar.links.ci", linkCi
+//		property "sonar.links.issue", linkIssue
+//		property "sonar.links.scm", linkScmUrl
+//		property "sonar.links.scm_dev", linkScmDevConnection
+//		property "sonar.java.coveragePlugin", "jacoco"
+//	}
+//}
 
 configure(rootProject) {
 	description = "Spring Framework"
@@ -1382,18 +1382,18 @@ configure(rootProject) {
 }
 
 configure([project(':spring-build-src'), project(':spring-framework-bom')]) {
-	sonarRunner {
-		skipProject = true
-	}
+//	sonarRunner {
+//		skipProject = true
+//	}
 }
 
 configure(project(':spring-core')) {
-	sonarRunner {
-		sonarProperties {
-			property "sonar.exclusions",
-					"src/main/java/org/springframework/cglib/**/*,src/main/java/org/springframework/asm/**/*"
-		}
-	}
+//	sonarRunner {
+//		sonarProperties {
+//			property "sonar.exclusions",
+//					"src/main/java/org/springframework/cglib/**/*,src/main/java/org/springframework/asm/**/*"
+//		}
+//	}
 }
 
 /*
