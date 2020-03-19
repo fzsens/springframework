@@ -332,7 +332,7 @@ class BeanDefinitionValueResolver {
 	}
 
 	/**
-     * 解析运行时引用
+     * 解析运行时引用，也就是 RuntimeReference
      *
 	 * Resolve a reference to another bean in the factory.
 	 */

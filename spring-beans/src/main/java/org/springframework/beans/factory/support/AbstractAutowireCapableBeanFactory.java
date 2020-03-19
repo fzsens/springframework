@@ -1272,7 +1272,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 checkDependencies(beanName, mbd, filteredPds, pvs);
             }
         }
-
+        // 属性设置
         applyPropertyValues(beanName, mbd, bw, pvs);
     }
 
