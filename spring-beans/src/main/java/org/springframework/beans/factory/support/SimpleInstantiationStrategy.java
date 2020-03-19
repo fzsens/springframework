@@ -31,6 +31,9 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * 
+ * Bean 实例化策略
+ * 
  * Simple object instantiation strategy for use in a BeanFactory.
  *
  * <p>Does not support Method Injection, although it provides hooks for subclasses
@@ -56,7 +59,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 
 
     /**
-     * 使用反射方法，实例化bean
+     * 使用反射方法，实例化bean，也是最常用的无构造参数方法
      *
      * @param bd the bean definition
      * @param beanName the name of the bean when it's created in this context.
@@ -69,6 +72,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 	public Object instantiate(RootBeanDefinition bd, String beanName, BeanFactory owner) {
 		// Don't override the class with CGLIB if no overrides.
 		if (bd.getMethodOverrides().isEmpty()) {
+			// 没有方法被覆盖（一般情况都是属于这种），使用 JDK 利用反射获取构造方法，进行 newInstance
 			Constructor<?> constructorToUse;
 			synchronized (bd.constructorArgumentLock) {
 				constructorToUse = (Constructor<?>) bd.resolvedConstructorOrFactoryMethod;
@@ -99,6 +103,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 			return BeanUtils.instantiateClass(constructorToUse);
 		}
 		else {
+			// 对于又 lookup-method 或者 replace-method 的时候，需要生成动态代理，拦截方法，转发到的对应类
 			// Must generate CGLIB subclass.
 			return instantiateWithMethodInjection(bd, beanName, owner);
 		}
@@ -115,7 +120,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 	}
 
     /**
-     * 使用反射方法实例化bean
+     * 使用反射方法实例化bean，指定构造方法
      *
      * @param bd the bean definition
      * @param beanName the name of the bean when it's created in this context.
@@ -160,6 +165,9 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 		throw new UnsupportedOperationException("Method Injection not supported in SimpleInstantiationStrategy");
 	}
 
+	/**
+	 * 使用工厂方法实例化 bean
+	 */
 	@Override
 	public Object instantiate(RootBeanDefinition bd, String beanName, BeanFactory owner,
 			Object factoryBean, final Method factoryMethod, Object... args) {
@@ -181,6 +189,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 			Method priorInvokedFactoryMethod = currentlyInvokedFactoryMethod.get();
 			try {
 				currentlyInvokedFactoryMethod.set(factoryMethod);
+				// 调用 factoryBean 的 get 方法
 				return factoryMethod.invoke(factoryBean, args);
 			}
 			finally {
