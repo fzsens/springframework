@@ -79,6 +79,7 @@ import org.springframework.util.StringUtils;
  * or if none matches, a {@link org.springframework.aop.target.SingletonTargetSource}
  * will be used by default to wrap the target bean instance.
  *
+ * 实现 {@link BeanPostProcessor } 在 bean 创建之后，作为后置增强，生成一个代理对象
  * @author Juergen Hoeller
  * @author Rod Johnson
  * @author Rob Harrop
