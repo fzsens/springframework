@@ -180,6 +180,8 @@ public abstract class AopUtils {
 	}
 
 	/**
+	 * Spring 的 AOP 是针对 class 类生成的，这里是判断最常用的 pointcut 切入点判断模式
+	 *
 	 * Can the given pointcut apply at all on the given class?
 	 * <p>This is an important test as it can be used to optimize
 	 * out a pointcut for a class.
@@ -191,6 +193,7 @@ public abstract class AopUtils {
 	 */
 	public static boolean canApply(Pointcut pc, Class<?> targetClass, boolean hasIntroductions) {
 		Assert.notNull(pc, "Pointcut must not be null");
+		// 1. 首先判断类是否满足
 		if (!pc.getClassFilter().matches(targetClass)) {
 			return false;
 		}
@@ -204,6 +207,7 @@ public abstract class AopUtils {
 		Set<Class<?>> classes = new LinkedHashSet<Class<?>>(ClassUtils.getAllInterfacesForClassAsSet(targetClass));
 		classes.add(targetClass);
 		for (Class<?> clazz : classes) {
+			// 2. 判断方法/返回值等是否满足
 			Method[] methods = clazz.getMethods();
 			for (Method method : methods) {
 				if ((introductionAwareMethodMatcher != null &&

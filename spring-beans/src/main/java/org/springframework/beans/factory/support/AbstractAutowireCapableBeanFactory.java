@@ -1646,6 +1646,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         }
 
         try {
+            // init-method 方法
             invokeInitMethods(beanName, wrappedBean, mbd);
         } catch (Throwable ex) {
             throw new BeanCreationException(
@@ -1654,6 +1655,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         }
 
         if (mbd == null || !mbd.isSynthetic()) {
+            // 后置处理器回调
             wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
         }
         return wrappedBean;

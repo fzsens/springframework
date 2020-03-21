@@ -79,7 +79,7 @@ import org.springframework.util.StringUtils;
  * or if none matches, a {@link org.springframework.aop.target.SingletonTargetSource}
  * will be used by default to wrap the target bean instance.
  *
- * 实现 {@link BeanPostProcessor } 在 bean 创建之后，作为后置增强，生成一个代理对象
+ * 实现 {@link org.springframework.beans.factory.config.BeanPostProcessor } 在 bean 创建之后，作为后置增强，生成一个代理对象
  * @author Juergen Hoeller
  * @author Rod Johnson
  * @author Rob Harrop
@@ -367,6 +367,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		}
 
 		// Create proxy if we have advice.
+		// 查找合适的增强 advice
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
 		if (specificInterceptors != DO_NOT_PROXY) {
 			this.advisedBeans.put(cacheKey, Boolean.TRUE);

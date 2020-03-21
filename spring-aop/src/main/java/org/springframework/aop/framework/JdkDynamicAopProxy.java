@@ -120,7 +120,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 		Class<?>[] proxiedInterfaces = AopProxyUtils.completeProxiedInterfaces(this.advised);
 		// 接口中是否定义了Equals和HashCode方法
 		findDefinedEqualsAndHashCodeMethods(proxiedInterfaces);
-		// 创建代理对象
+		// 创建代理对象，invocationHandler 就是 this，也就是调用的逻辑会回到 JdkDynamicAopProxy 中执行
 		return Proxy.newProxyInstance(classLoader, proxiedInterfaces, this);
 	}
 
@@ -180,6 +180,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 			Object retVal;
 
 			// 设置了expose-proxy 属性，则将代理绑定到{@link ThreadLocal}变量中
+			// 可以使用 AopContext 获取代理对象
 			if (this.advised.exposeProxy) {
 				// Make invocation available if necessary.
 				oldProxy = AopContext.setCurrentProxy(proxy);

@@ -19,6 +19,9 @@ package org.springframework.aop;
 import org.aopalliance.aop.Advice;
 
 /**
+ * 包含一个增强（advice），可以有若干种判断 advice 是否可以生效的方式，典型的 PointCut，实现为 DefaultPointcutAdvisor
+ * 要在 Spring 种定义一个切入点，一般的方法也可以声明一个 Advisor 来导入
+ *
  * Base interface holding AOP <b>advice</b> (action to take at a joinpoint)
  * and a filter determining the applicability of the advice (such as
  * a pointcut). <i>This interface is not for use by Spring users, but to
@@ -46,6 +49,8 @@ public interface Advisor {
 	Advice getAdvice();
 
 	/**
+	 * 是否对每一个实例都生成，默认都是 true，只有在针对特定实例的时候才会进行设置
+	 *
 	 * Return whether this advice is associated with a particular instance
 	 * (for example, creating a mixin) or shared with all instances of
 	 * the advised class obtained from the same Spring bean factory.

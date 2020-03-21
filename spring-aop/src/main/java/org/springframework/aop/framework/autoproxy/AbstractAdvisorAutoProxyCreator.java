@@ -88,11 +88,11 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	 * @see #extendAdvisors
 	 */
 	protected List<Advisor> findEligibleAdvisors(Class<?> beanClass, String beanName) {
-	    // 获取所有的Advisor
+	    // 获取所有的 Advisor
 		List<Advisor> candidateAdvisors = findCandidateAdvisors();
-		// 在所有的Advisor中，选择出适合当前Bean的Advisor
+		// 在所有的 Advisor 中，选择出适合当前 Bean 的 Advisor
 		List<Advisor> eligibleAdvisors = findAdvisorsThatCanApply(candidateAdvisors, beanClass, beanName);
-		// 扩充Advisors，spring会添加一些内部的Advisors，主要是设值 ExposeInvocationInterceptor
+		// 扩充 Advisors ，spring 会添加一些内部的 Advisors，主要是设值 ExposeInvocationInterceptor
 		extendAdvisors(eligibleAdvisors);
 		if (!eligibleAdvisors.isEmpty()) {
 		    // 排序
