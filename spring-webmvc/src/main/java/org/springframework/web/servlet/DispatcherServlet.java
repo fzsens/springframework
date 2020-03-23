@@ -486,10 +486,15 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * <p>May be overridden in subclasses in order to initialize further strategy objects.
 	 */
 	protected void initStrategies(ApplicationContext context) {
+		// 多文件上传
 		initMultipartResolver(context);
+		// 本地化
 		initLocaleResolver(context);
+		// 主题模板
 		initThemeResolver(context);
+		// handlerMapping
 		initHandlerMappings(context);
+		// 参数适配器
 		initHandlerAdapters(context);
 		initHandlerExceptionResolvers(context);
 		initRequestToViewNameTranslator(context);
@@ -944,7 +949,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				multipartRequestParsed = (processedRequest != request);
 
 				// Determine handler for the current request.
-                // 从HandlerMapping中选择一个Handler来处理请求
+                // 从 HandlerMapping中选择一个 Handler 来处理请求
 				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null || mappedHandler.getHandler() == null) {
                     // 找不到HandlerMapping
@@ -953,7 +958,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				}
 
 				// Determine handler adapter for the current request.
-                // 从注册的HandlerAdapter 列表中,获取适配已经映射到的Handler的adapter,如果使用Controller类,一般未SimpleControllerHandlerAdapter
+                // 从注册的HandlerAdapter 列表中,获取适配已经映射到的Handler的adapter,如果使用Controller类,一般为SimpleControllerHandlerAdapter
                 // 大部分Handler由 RequestMappingHandlerAdapter 进行处理, Adapter的作用主要如下
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
