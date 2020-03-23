@@ -267,16 +267,17 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 			throws Throwable {
 
 		// If the transaction attribute is null, the method is non-transactional.
-		// 获得Transaction的配置属性，TransactionAttribute是TransactionDefinition的拓展
-        // 可以通过rollbackOn针对一些特性的异常进行回滚或者不回滚
+		// 根据类和方法，获得 Transaction 的配置属性，TransactionAttribute是TransactionDefinition的拓展
+        // 可以通过rollbackOn 针对一些特性的异常进行回滚或者不回滚
 		final TransactionAttribute txAttr = getTransactionAttributeSource().getTransactionAttribute(method, targetClass);
-        // TransactionManager
+		// 获取事务管理器，TransactionManager
 		final PlatformTransactionManager tm = determineTransactionManager(txAttr);
 		final String joinpointIdentification = methodIdentification(method, targetClass);
 
 		if (txAttr == null || !(tm instanceof CallbackPreferringPlatformTransactionManager)) {
+			// 绝大多数带有事务的逻辑，执行的是这个分支，应该 TransactionManager 不是 CallbackPreferringPlatformTransactionManager
 			// Standard transaction demarcation with getTransaction and commit/rollback calls.
-            // 创建一个事务，txInfo内部持有TransactionStatus
+			// 创建一个事务，txInfo内部持有TransactionStatus
 			TransactionInfo txInfo = createTransactionIfNecessary(tm, txAttr, joinpointIdentification);
 			Object retVal = null;
 			try {
@@ -297,9 +298,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
             // 执行事务提交
 			commitTransactionAfterReturning(txInfo);
 			return retVal;
-		}
-
-		else {
+		} else {
 			// It's a CallbackPreferringPlatformTransactionManager: pass a TransactionCallback in.
 			try {
 				Object result = ((CallbackPreferringPlatformTransactionManager) tm).execute(txAttr,
@@ -464,6 +463,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 			txInfo.newTransactionStatus(status);
 		}
 		else {
+			// txAttr 为 null ，那么就执行一个最简单的逻辑，new 一个 TransactionInfo 而不需要开启事务
 			// The TransactionInfo.hasTransaction() method will return
 			// false. We created it only to preserve the integrity of
 			// the ThreadLocal stack maintained in this class.

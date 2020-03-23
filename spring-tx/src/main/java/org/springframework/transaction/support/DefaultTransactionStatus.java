@@ -65,8 +65,10 @@ public class DefaultTransactionStatus extends AbstractTransactionStatus {
 	 * Create a new DefaultTransactionStatus instance.
 	 * @param transaction underlying transaction object that can hold
 	 * state for the internal transaction implementation
+	 *                    事务对象，保存状态和事务的具体实现（Connection）
 	 * @param newTransaction if the transaction is new,
 	 * else participating in an existing transaction
+	 *                    是否新事务，如果是新事务，可以直接提交，否则依赖于外层的事务
 	 * @param newSynchronization if a new transaction synchronization
 	 * has been opened for the given transaction
 	 * @param readOnly whether the transaction is read-only

@@ -325,6 +325,7 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 	//---------------------------------------------------------------------
 
 	/**
+	 * 开启一个事务
 	 * This implementation handles propagation behavior. Delegates to
 	 * {@code doGetTransaction}, {@code isExistingTransaction}
 	 * and {@code doBegin}.
@@ -770,11 +771,18 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 					status.releaseHeldSavepoint();
 				}
 				else if (status.isNewTransaction()) {
+					// 只有新事务才会提交
+					// PROPAGATION_NESTED 或者 PROPAGATION_REQUIRED_NEW
 					if (status.isDebug()) {
 						logger.debug("Initiating transaction commit");
 					}
                     // 模板方法 JDBC connection.commit();
 					doCommit(status);
+				} else {
+					// 如果是子事务，PROPAGATION_SUPPORTS 或 PROPAGATION_REQUIRED 或 PROPAGATION_MANDATORY 这几种状态是旧事务
+					// 提交的时候将什么都不做，因为他们是运行在外层事务当中，如果子事务没有回滚，将由外层事务一次性提交
+					// 大部分的嵌套逻辑，执行的就是这个
+					logger.debug("Internal transaction commit.");
 				}
 				// Throw UnexpectedRollbackException if we have a global rollback-only
 				// marker but still didn't get a corresponding exception from commit.
@@ -783,6 +791,7 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 							"Transaction silently rolled back because it has been marked as rollback-only");
 				}
 			}
+
             // 触发TransactionSynchronization相关的事件
 			catch (UnexpectedRollbackException ex) {
 				// can only be caused by doCommit
